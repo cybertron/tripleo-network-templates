@@ -38,6 +38,7 @@ nic on a "public" network on which the undercloud also has an interface.
 Usage Instructions
 ~~~~~~~~~~~~~~~~~~
 ::
+
     # Assumes this repo has been cloned to ~/tripleo-network-templates
     cp -r /usr/share/openstack-tripleo-heat-templates ~/simple-templates
     cp ~/tripleo-network-templates/simple/network-isolation.yaml ~/simple-templates/environments/network-isolation.yaml

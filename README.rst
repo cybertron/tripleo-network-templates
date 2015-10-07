@@ -35,3 +35,50 @@ To use::
 Required parameters to deploy command (in addition to any others)::
 
     --templates ~/simple-templates -e ~/tripleo-network-templates/simple/network-environment.yaml -e ~/simple-templates/environments/network-isolation.yaml
+
+Untagged External
+-----------------
+This is what I use for my home baremetal environment.  I'm not able to
+run a standard single nic with vlans configuration because I only have
+a single VLAN-capable switch, and additionally my provisioning network
+is a completely separate, isolated switch connected to a dedicated port
+on each server.
+
+To address these issues, the templates in `untagged-external` add a
+separate nic interface for the provisioning network, and configure the
+OVS bridge so that the external network is untagged.  This allows me to
+communicate with the external addresses from my VLAN-less home network
+while still using VLAN isolation for all of the other networks.
+
+.. note:: It seems to me that there should be some way to untag traffic
+          that is outgoing from the switch port that is connected to the
+          rest of my network, but my switch is pretty much VLAN for Dummies,
+          so it doesn't expose more advanced configuration and I haven't
+          figured out how to make it do that.  I would still need custom
+          nic configs for the additional provisioning nic anyway, so I
+          haven't spent much time investigating it.
+
+To use:
+
+Edit `untagged-external/network-environment.yaml` to reflect your network.
+
+If you do not have any single digit CIDR masks in your network configuration
+(which the example configuration does), the following parameters are all you
+need to pass to the deploy command.  If you _do_ have a single digit CIDR
+like I do, then see below for alternate instructions::
+
+    # Assumes this repo has been cloned to ~/tripleo-network-templates
+    -e ~/tripleo-network-templates/untagged-external/network-environment.yaml -e /usr/share/openstack-tripleo-heat-templates/environments/network-isolation.yaml
+
+Single Digit CIDR Fix
+~~~~~~~~~~~~~~~~~~~~~
+The following instructions will enable a single digit CIDR mask on the
+external network, as found in the example values for these templates::
+
+    # Assumes this repo has been cloned to ~/tripleo-network-templates
+    cp -r /usr/share/openstack-tripleo-heat-templates ~/untagged-external-templates
+    sed -i 's/- {get_attr: \[ExternalPort, subnets, 0, cidr, -2\]}//' untagged-external-templates/network/ports/external.yaml
+
+Required parameters to deploy command (in addition to any others)::
+
+    --templates ~/untagged-external-templates -e ~/tripleo-network-templates/untagged-external/network-environment.yaml -e ~/untagged-external-templates/environments/network-isolation.yaml

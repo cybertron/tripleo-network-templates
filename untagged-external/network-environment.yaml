@@ -1,0 +1,30 @@
+resource_registry:
+  #OS::TripleO::BlockStorage::Net::SoftwareConfig: nic-configs/cinder-storage.yaml
+  OS::TripleO::Compute::Net::SoftwareConfig: nic-configs/compute.yaml
+  OS::TripleO::Controller::Net::SoftwareConfig: nic-configs/controller.yaml
+  #OS::TripleO::ObjectStorage::Net::SoftwareConfig: nic-configs/swift-storage.yaml
+  OS::TripleO::CephStorage::Net::SoftwareConfig: nic-configs/ceph-storage.yaml
+
+parameter_defaults:
+  InternalApiNetCidr: 10.2.2.0/24
+  TenantNetCidr: 10.5.5.0/24
+  StorageNetCidr: 10.3.3.0/24
+  StorageMgmtNetCidr: 10.4.4.0/24
+  ExternalNetCidr: 11.0.0.0/8
+  InternalApiAllocationPools: [{'start': '10.2.2.10', 'end': '10.2.2.200'}]
+  TenantAllocationPools: [{'start': '10.5.5.10', 'end': '10.5.5.200'}]
+  StorageAllocationPools: [{'start': '10.3.3.10', 'end': '10.3.3.200'}]
+  StorageMgmtAllocationPools: [{'start': '10.4.4.10', 'end': '10.4.4.200'}]
+  # Leave room for floating IPs in the External allocation pool
+  ExternalAllocationPools: [{'start': '11.1.1.111', 'end': '11.1.1.123'}]
+  InternalApiNetworkVlanID: 2
+  StorageNetworkVlanID: 3
+  StorageMgmtNetworkVlanID: 4
+  TenantNetworkVlanID: 5
+  ExternalNetworkVlanID: 1
+  # Set to the router gateway on the external network
+  ExternalInterfaceDefaultRoute: 11.1.1.1
+  # Set to "br-ex" if using floating IPs on native VLAN on bridge br-ex
+  NeutronExternalNetworkBridge: "br-ex"
+  EC2MetadataIp: 9.1.1.1
+  ControlPlaneDefaultRoute: 9.1.1.1

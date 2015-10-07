@@ -22,7 +22,7 @@ About as basic as you can get and still be doing network isolation in
 some form.  Runs the external API endpoints on an external network, and
 everything else on the provisioning network.  This is mostly useful for
 environments with two physical networks that don't have the ability to
-run with vlans because it moves the user-facing bits of OpenStack onto
+run with vlans, because it moves the user-facing bits of OpenStack onto
 a user-facing network and off the (in my case) unroutable provisioning
 network.
 
@@ -31,6 +31,9 @@ To use::
     # Assumes this repo has been cloned to ~/tripleo-network-templates
     cp -r /usr/share/openstack-tripleo-heat-templates ~/simple-templates
     cp ~/tripleo-network-templates/simple/network-isolation.yaml ~/simple-templates/environments/network-isolation.yaml
+
+Edit ~/tripleo-network-templates/simple/network-environment.yaml to reflect
+your network setup.
 
 Required parameters to deploy command (in addition to any others)::
 

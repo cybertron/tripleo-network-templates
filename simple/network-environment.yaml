@@ -7,10 +7,10 @@
 # include network-isolation.yaml.
 resource_registry:
   #OS::TripleO::BlockStorage::Net::SoftwareConfig: ../network/config/single-nic-vlans/cinder-storage.yaml
-  OS::TripleO::Compute::Net::SoftwareConfig: /home/cloud-user/nic-configs/compute.yaml
-  OS::TripleO::Controller::Net::SoftwareConfig: /home/cloud-user/nic-configs/controller.yaml
+  OS::TripleO::Compute::Net::SoftwareConfig: nic-configs/compute.yaml
+  OS::TripleO::Controller::Net::SoftwareConfig: nic-configs/controller.yaml
   #OS::TripleO::ObjectStorage::Net::SoftwareConfig: ../network/config/single-nic-vlans/swift-storage.yaml
-  OS::TripleO::CephStorage::Net::SoftwareConfig: /home/cloud-user/nic-configs/ceph-storage.yaml
+  OS::TripleO::CephStorage::Net::SoftwareConfig: nic-configs/ceph-storage.yaml
 
 # We use parameter_defaults instead of parameters here because Tuskar munges
 # the names of top level and role level parameters with the role name and a

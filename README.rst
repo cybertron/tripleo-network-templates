@@ -26,8 +26,18 @@ run with vlans, because it moves the user-facing bits of OpenStack onto
 a user-facing network and off the (in my case) unroutable provisioning
 network.
 
-To use::
+Environment Details
+~~~~~~~~~~~~~~~~~~~
+I have used this configuration in my home baremetal environment before I
+had a VLAN capable switch, but now I use it primarily with an
+OpenStack Virtual Baremetal environment that is not VLAN capable either.
+In the virtual environment, the target "baremetal" systems have their
+first nic on a private, unroutable provisioning network, and their second
+nic on a "public" network on which the undercloud also has an interface.
 
+Usage Instructions
+~~~~~~~~~~~~~~~~~~
+::
     # Assumes this repo has been cloned to ~/tripleo-network-templates
     cp -r /usr/share/openstack-tripleo-heat-templates ~/simple-templates
     cp ~/tripleo-network-templates/simple/network-isolation.yaml ~/simple-templates/environments/network-isolation.yaml
@@ -61,7 +71,15 @@ while still using VLAN isolation for all of the other networks.
           nic configs for the additional provisioning nic anyway, so I
           haven't spent much time investigating it.
 
-To use:
+Environment Details
+~~~~~~~~~~~~~~~~~~~
+Each target baremetal system has two network interfaces.  The first is
+connected to a VLAN capable switch on my home network (11.0.0.0/8).
+The second is connected to a dedicated, isolated provisioning switch,
+which I have arbitrarily assigned the 9.1.1.0/24 network.
+
+Usage Instructions
+~~~~~~~~~~~~~~~~~~
 
 Edit `untagged-external/network-environment.yaml` to reflect your network.
 

@@ -5,7 +5,7 @@ resource_registry:
   OS::TripleO::Network::External: ../network/external.yaml
 
   # Port assignments for the VIPs
-  OS::TripleO::Network::Ports::ExternalVipPort: ../network/ports/vip.yaml
+  OS::TripleO::Network::Ports::ExternalVipPort: ../network/ports/external.yaml
 
   # Port assignments for the controller role
   OS::TripleO::Controller::Ports::ExternalPort: ../network/ports/external.yaml

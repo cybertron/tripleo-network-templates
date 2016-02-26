@@ -1,0 +1,5 @@
+resource_registry:
+  # External
+  OS::TripleO::Network::External: ../network/external.yaml
+  OS::TripleO::Network::Ports::ExternalVipPort: ../network/ports/external.yaml
+  OS::TripleO::Controller::Ports::ExternalPort: ../network/ports/external.yaml

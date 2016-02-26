@@ -50,6 +50,15 @@ Required parameters to deploy command (in addition to any others)::
 
     --templates ~/simple-templates -e ~/tripleo-network-templates/simple/network-environment.yaml -e ~/simple-templates/environments/network-isolation.yaml
 
+Simple Bond
+-----------
+These templates implement the same network architecture as the Simple
+templates, but instead of a single public nic, they use two nics
+bonded together.  This means the templates require at least three nics
+on the overcloud nodes.
+
+Otherwise these templates can be used the same way as Simple.
+
 Untagged External
 -----------------
 This is what I use for my home baremetal environment.  I'm not able to

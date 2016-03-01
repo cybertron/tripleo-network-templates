@@ -1,0 +1,17 @@
+
+resource_registry:
+  OS::TripleO::BlockStorage::Net::SoftwareConfig: nic-configs/cinder-storage.yaml
+  OS::TripleO::Compute::Net::SoftwareConfig: nic-configs/compute.yaml
+  OS::TripleO::Controller::Net::SoftwareConfig: nic-configs/controller.yaml
+  OS::TripleO::ObjectStorage::Net::SoftwareConfig: nic-configs/swift-storage.yaml
+  OS::TripleO::CephStorage::Net::SoftwareConfig: nic-configs/ceph-storage.yaml
+
+parameter_defaults:
+  ControlPlaneSubnetCidr: '24'
+  ControlPlaneDefaultRoute: 9.1.1.1
+  EC2MetadataIp: 9.1.1.1
+  ExternalNetCidr: 8.1.1.0/24
+  ExternalAllocationPools: [{"start": "8.1.1.10", "end": "8.1.1.50"}]
+  ExternalInterfaceDefaultRoute: 8.1.1.1
+  NeutronExternalNetworkBridge: "br-ex"
+  DnsServers: ["8.8.8.8", "8.8.4.4"]

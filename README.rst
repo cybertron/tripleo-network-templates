@@ -50,8 +50,8 @@ Required parameters to deploy command (in addition to any others)::
 
     --templates ~/simple-templates -e ~/tripleo-network-templates/simple/network-environment.yaml -e ~/simple-templates/environments/network-isolation.yaml
 
-Simple Bond
------------
+Simple Bond/Simple LinuxBond
+----------------------------
 These templates implement the same network architecture as the Simple
 templates, but instead of a single public nic, they use two nics
 bonded together.  This means the templates require at least three nics

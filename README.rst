@@ -113,3 +113,30 @@ external network, as found in the example values for these templates::
 Required parameters to deploy command (in addition to any others)::
 
     --templates ~/untagged-external-templates -e ~/tripleo-network-templates/untagged-external/network-environment.yaml -e ~/untagged-external-templates/environments/network-isolation.yaml
+
+Multiple NICs
+-------------
+This is a version of the upstream multiple-nics templates that is
+designed to work with a multiple nic OVB setup.
+
+Environment Details
+~~~~~~~~~~~~~~~~~~~
+Each baremetal system has 6 nics attached to it, all on separate networks.
+The first nic is the provisioning network, the second is the external
+network.  Both of these must also be connected to the undercloud and
+configured appropriately.
+
+The other networks are simply generic networks that are used for the
+other isolated networks.  They do not need to be attached to the
+undercloud, but all of the nics must be on all of the systems even if
+one of the networks is not used on the node type.
+
+Usage Instructions
+~~~~~~~~~~~~~~~~~
+Edit ~/tripleo-network-templates/multiple-nics/network-environment.yaml to reflect
+your network setup.
+
+Required parameters to deploy command (in addition to any others)::
+
+    # Assumes this repo has been cloned to ~/tripleo-network-templates
+    --templates -e ~/tripleo-network-templates/multiple-nics/network-environment.yaml -e /usr/share/openstack-tripleo-heat-templates/environments/network-isolation.yaml

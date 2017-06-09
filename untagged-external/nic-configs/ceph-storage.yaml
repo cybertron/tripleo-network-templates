@@ -1,9 +1,5 @@
 heat_template_version: 2015-04-30
 
-description: >
-  Software Config to drive os-net-config to configure VLANs for the
-  ceph storage role.
-
 parameters:
   ControlPlaneIp:
     default: ''
@@ -32,6 +28,11 @@ parameters:
   ManagementIpSubnet: # Only populated when including environments/network-management.yaml
     default: ''
     description: IP address/subnet on the management network
+    type: string
+  BondInterfaceOvsOptions:
+    default: 'bond_mode=active-backup'
+    description: The ovs_options string for the bond interface. Set things like
+                 lacp=active and/or bond_mode=balance-slb using this option.
     type: string
   ExternalNetworkVlanID:
     default: 10
@@ -78,50 +79,42 @@ parameters:
 
 resources:
   OsNetConfigImpl:
-    type: OS::Heat::StructuredConfig
     properties:
-      group: os-apply-config
       config:
         os_net_config:
           network_config:
-            -
-              type: ovs_bridge
-              name: br-storage
-              use_dhcp: true
-              dns_servers: {get_param: DnsServers}
-              members:
-                -
-                  type: interface
-                  name: nic1
-                  # force the MAC address of the bridge to this interface
-                  primary: true
-                -
-                  type: vlan
-                  vlan_id: {get_param: StorageNetworkVlanID}
-                  addresses:
-                  -
-                    ip_netmask: {get_param: StorageIpSubnet}
-                -
-                  type: vlan
-                  vlan_id: {get_param: StorageMgmtNetworkVlanID}
-                  addresses:
-                  -
-                    ip_netmask: {get_param: StorageMgmtIpSubnet}
-            -
-              type: interface
-              name: nic2
-              use_dhcp: false
+          - type: ovs_bridge
+            name: br-ex
+            dns_servers: {get_param: DnsServers}
+            use_dhcp: false
+            members:
+            - type: interface
+              name: nic1
+              primary: true
+            - type: vlan
+              vlan_id: {get_param: StorageNetworkVlanID}
               addresses:
-              -
-                ip_netmask:
-                  list_join:
-                    - '/'
-                    - - {get_param: ControlPlaneIp}
-                      - {get_param: ControlPlaneSubnetCidr}
-              routes:
-                -
-                  ip_netmask: 169.254.169.254/32
-                  next_hop: {get_param: EC2MetadataIp}
+              - ip_netmask: {get_param: StorageIpSubnet}
+            - type: vlan
+              vlan_id: {get_param: StorageMgmtNetworkVlanID}
+              addresses:
+              - ip_netmask: {get_param: StorageMgmtIpSubnet}
+          - type: interface
+            name: nic2
+            use_dhcp: false
+            addresses:
+            - ip_netmask:
+                list_join:
+                - /
+                - - {get_param: ControlPlaneIp}
+                  - {get_param: ControlPlaneSubnetCidr}
+            routes:
+            - ip_netmask: 169.254.169.254/32
+              next_hop: {get_param: EC2MetadataIp}
+            - default: true
+              next_hop: {get_param: ControlPlaneDefaultRoute}
+      group: os-apply-config
+    type: OS::Heat::StructuredConfig
 
 outputs:
   OS::stack_id:

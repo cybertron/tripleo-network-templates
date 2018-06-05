@@ -1,4 +1,4 @@
-heat_template_version: 2015-04-30
+heat_template_version: ocata
 
 parameters:
   ControlPlaneIp:
@@ -11,7 +11,7 @@ parameters:
     type: string
   InternalApiIpSubnet:
     default: ''
-    description: IP address/subnet on the internal API network
+    description: IP address/subnet on the internal_api network
     type: string
   StorageIpSubnet:
     default: ''
@@ -19,7 +19,7 @@ parameters:
     type: string
   StorageMgmtIpSubnet:
     default: ''
-    description: IP address/subnet on the storage mgmt network
+    description: IP address/subnet on the storage_mgmt network
     type: string
   TenantIpSubnet:
     default: ''
@@ -81,44 +81,48 @@ resources:
   OsNetConfigImpl:
     properties:
       config:
-        os_net_config:
-          network_config:
-          - type: ovs_bridge
-            name: br-ex
-            dns_servers: {get_param: DnsServers}
-            use_dhcp: false
-            members:
-            - type: interface
-              name: nic1
-              primary: true
-            - type: vlan
-              vlan_id: {get_param: InternalApiNetworkVlanID}
-              addresses:
-              - ip_netmask: {get_param: InternalApiIpSubnet}
-            - type: vlan
-              vlan_id: {get_param: StorageNetworkVlanID}
-              addresses:
-              - ip_netmask: {get_param: StorageIpSubnet}
-            - type: vlan
-              vlan_id: {get_param: TenantNetworkVlanID}
-              addresses:
-              - ip_netmask: {get_param: TenantIpSubnet}
-          - type: interface
-            name: nic2
-            use_dhcp: false
-            addresses:
-            - ip_netmask:
-                list_join:
-                - /
-                - - {get_param: ControlPlaneIp}
-                  - {get_param: ControlPlaneSubnetCidr}
-            routes:
-            - ip_netmask: 169.254.169.254/32
-              next_hop: {get_param: EC2MetadataIp}
-            - default: true
-              next_hop: {get_param: ControlPlaneDefaultRoute}
-      group: os-apply-config
-    type: OS::Heat::StructuredConfig
+        str_replace:
+          params:
+            $network_config:
+              network_config:
+              - type: ovs_bridge
+                name: br-ex
+                dns_servers: {get_param: DnsServers}
+                use_dhcp: false
+                members:
+                - type: interface
+                  name: nic1
+                  primary: true
+                - type: vlan
+                  vlan_id: {get_param: InternalApiNetworkVlanID}
+                  addresses:
+                  - ip_netmask: {get_param: InternalApiIpSubnet}
+                - type: vlan
+                  vlan_id: {get_param: StorageNetworkVlanID}
+                  addresses:
+                  - ip_netmask: {get_param: StorageIpSubnet}
+                - type: vlan
+                  vlan_id: {get_param: TenantNetworkVlanID}
+                  addresses:
+                  - ip_netmask: {get_param: TenantIpSubnet}
+              - type: interface
+                name: nic2
+                use_dhcp: false
+                addresses:
+                - ip_netmask:
+                    list_join:
+                    - /
+                    - - {get_param: ControlPlaneIp}
+                      - {get_param: ControlPlaneSubnetCidr}
+                routes:
+                - ip_netmask: 169.254.169.254/32
+                  next_hop: {get_param: EC2MetadataIp}
+                - default: true
+                  next_hop: {get_param: ControlPlaneDefaultRoute}
+          template:
+            get_file: /usr/share/openstack-tripleo-heat-templates/network/scripts/run-os-net-config.sh
+      group: script
+    type: OS::Heat::SoftwareConfig
 
 outputs:
   OS::stack_id:
